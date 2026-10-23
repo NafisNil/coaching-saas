@@ -58,4 +58,17 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
     {
         return $this->belongsTo(Branch::class);
     }
+
+    public function student()
+    {
+        return $this->hasOne(Student::class);
+    }
+    public function parent()
+    {
+        return $this->hasOne(ParentModel::class);
+    }
+    public function teacher()
+    {
+        return $this->hasOne(Teacher::class);
+    }
 }

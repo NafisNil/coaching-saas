@@ -159,5 +159,23 @@ class DatabaseSeeder extends Seeder
             'start_time' => '18:00:00',
             'end_time' => '19:30:00',
         ]);
+
+
+
+        $dates = ['2026-10-20', '2026-10-21', '2026-10-22', '2026-10-23', '2026-10-24'];
+        foreach ($dates as $index => $date) {
+            \App\Models\Attendance::create([
+                'institution_id' => $institution->id,
+                'batch_id' => $batch->id,
+                'student_id' => $student->id,
+                'date' => $date,
+                'status' => $index >= 2 ? 'absent' : 'present', // Flag last 3 as absent
+                'marked_by' => $teacherUser->id,
+                'method' => 'manual',
+            ]);
+        }
+
+        $riskService = new \App\Services\StudentRiskService();
+        $riskService->evaluateStudentRisk($student);
     }
 }

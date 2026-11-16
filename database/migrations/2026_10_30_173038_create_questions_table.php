@@ -13,6 +13,18 @@ return new class extends Migration
     {
         Schema::create('questions', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('institution_id')->constrained()->onDelete('cascade');
+            $table->foreignId('subject_id')->constrained()->onDelete('cascade');
+            $table->foreignId('topic_id')->constrained()->onDelete('cascade');
+            $table->enum('type', ['mcq', 'written'])->default('mcq');
+            $table->text('question_text');
+            $table->json('options')->nullable();
+            $table->text('correct_answer')->nullable();
+            $table->decimal('marks', 5, 2)->default(0);
+            $table->enum('difficulty', ['easy', 'medium', 'hard'])->default('medium');
+            $table->string('board_name')->nullable();
+            $table->integer('board_year')->nullable();
+            $table->string('language')->default('en');
             $table->timestamps();
         });
     }

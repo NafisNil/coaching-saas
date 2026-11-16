@@ -177,5 +177,56 @@ class DatabaseSeeder extends Seeder
 
         $riskService = new \App\Services\StudentRiskService();
         $riskService->evaluateStudentRisk($student);
+
+        $topic = \App\Models\Topic::create([
+            'institution_id' => $institution->id,
+            'subject_id' => $subject->id,
+            'title' => "Mechanics & Newton's Laws",
+        ]);
+
+        // 2. Add Question to Question Bank
+        $question = \App\Models\Question::create([
+            'institution_id' => $institution->id,
+            'subject_id' => $subject->id,
+            'topic_id' => $topic->id,
+            'type' => 'mcq',
+            'question_text' => 'What is the SI unit of force?',
+            'options' => ['Joule', 'Newton', 'Pascal', 'Watt'],
+            'correct_answer' => 'Newton',
+            'marks' => 1.00,
+            'difficulty' => 'easy',
+            'board_name' => 'Dhaka Board',
+            'board_year' => 2023,
+        ]);
+
+        // 3. Create Exam & Link Question
+        $exam = \App\Models\Exam::create([
+            'institution_id' => $institution->id,
+            'batch_id' => $batch->id,
+            'subject_id' => $subject->id,
+            'title' => 'Physics Mid-Term Assessment',
+            'total_marks' => 20.00,
+            'duration_minutes' => 30,
+            'exam_date' => now()->addDays(2),
+            'type' => 'online',
+            'status' => 'published',
+        ]);
+
+        $exam->questions()->attach($question->id, ['marks_assigned' => 1.00]);
+
+        // 4. Record Sample Exam Result
+        $examResult = \App\Models\ExamResult::create([
+            'institution_id' => $institution->id,
+            'exam_id' => $exam->id,
+            'student_id' => $student->id,
+            'marks_obtained' => 16.00,
+            'percentage' => 80.00,
+            'grade' => 'A+',
+            'rank' => 1,
+        ]);
+
+        // 5. Update Topic Analytic
+        $gapService = new \App\Services\LearningGapService();
+        $gapService->recordTopicPerformance($student, $topic, true);
     }
 }

@@ -13,6 +13,15 @@ return new class extends Migration
     {
         Schema::create('exams', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('institution_id')->constrained()->onDelete('cascade');
+            $table->foreignId('subject_id')->constrained()->onDelete('cascade');
+            $table->foreignId('batch_id')->constrained()->onDelete('cascade');
+            $table->string('title');
+            $table->decimal('total_marks', 5, 2)->default(0);
+            $table->integer('duration_minutes')->default(30);
+            $table->dateTime('exam_date');
+            $table->enum('type',['online', 'offline'])->default('offline');
+            $table->enum('status', ['draft', 'published', 'completed'])->default('draft');
             $table->timestamps();
         });
     }

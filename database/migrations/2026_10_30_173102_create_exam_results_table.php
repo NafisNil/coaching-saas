@@ -13,7 +13,17 @@ return new class extends Migration
     {
         Schema::create('exam_results', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('exam_id')->constrained()->onDelete('cascade');
+            $table->foreignId('student_id')->constrained()->onDelete('cascade');
+            $table->foreignId('institution_id')->constrained()->onDelete('cascade');
+            $table->decimal('marks_obtained', 8, 2)->default(0);
+            $table->decimal('percentage', 8, 2)->default(0);
+            $table->string('grade')->nullable();
+            $table->integer('rank')->nullable();
+            $table->text('remarks')->nullable();
             $table->timestamps();
+
+            $table->unique(['exam_id', 'student_id']);
         });
     }
 

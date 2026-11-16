@@ -12,7 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('exam_questions', function (Blueprint $table) {
-            $table->id();
+
+            $table->foreignId('exam_id')->constrained()->onDelete('cascade');
+            $table->foreignId('question_id')->constrained()->onDelete('cascade');
+            $table->decimal('marks_assigned', 5, 2)->default(0);
+            $table->primary(['exam_id', 'question_id']);
             $table->timestamps();
         });
     }
